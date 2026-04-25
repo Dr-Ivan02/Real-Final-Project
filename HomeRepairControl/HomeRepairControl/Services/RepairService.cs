@@ -1,18 +1,16 @@
-﻿using HomeRepairControl.Models;
+﻿using HomeRepairControl.Data;
+using HomeRepairControl.Models;
 
 namespace HomeRepairControl.Services
 {
     public class RepairService
     {
-        private List<RepairItem> repairItems = new List<RepairItem>();
-        private List<RepairNote> repairNotes = new List<RepairNote>();
-        private int nextItemId = 1;
-        private int nextNoteId = 1;
+        private AppDbContext context = new AppDbContext();
 
         public void AddRepairItem(RepairItem item)
         {
-            item.Id = nextItemId++;
-            repairItems.Add(item);
+            context.RepairItems.Add(item);
+            context.SaveChanges();
         }
 
         public void AddRepairItem(string itemName, string damageDescription)
@@ -23,18 +21,18 @@ namespace HomeRepairControl.Services
 
         public List<RepairItem> GetAllRepairItems()
         {
-            return repairItems;
+            return context.RepairItems.ToList();
         }
 
         public RepairItem? GetRepairItemById(int id)
         {
-            return repairItems.FirstOrDefault(i => i.Id == id);
+            return context.RepairItems.FirstOrDefault(i => i.Id == id);
         }
 
         public List<RepairItem> SearchByStatus(string status)
         {
-            return repairItems
-                .Where(i => i.Status.Equals(status, StringComparison.OrdinalIgnoreCase))
+            return context.RepairItems
+                .Where(i => i.Status == status)
                 .ToList();
         }
 
@@ -45,6 +43,7 @@ namespace HomeRepairControl.Services
             if (item != null)
             {
                 item.Status = status;
+                context.SaveChanges();
             }
         }
 
@@ -55,6 +54,7 @@ namespace HomeRepairControl.Services
             if (item != null)
             {
                 item.Notes = notes;
+                context.SaveChanges();
             }
         }
 
@@ -64,21 +64,27 @@ namespace HomeRepairControl.Services
 
             if (item != null)
             {
-                repairItems.Remove(item);
-                repairNotes.RemoveAll(n => n.RepairItemId == id);
+                List<RepairNote> notes = context.RepairNotes
+                    .Where(n => n.RepairItemId == id)
+                    .ToList();
+
+                context.RepairNotes.RemoveRange(notes);
+                context.RepairItems.Remove(item);
+                context.SaveChanges();
             }
         }
 
         public void AddRepairNote(int repairItemId, string text)
         {
             RepairNote note = new RepairNote(repairItemId, text);
-            note.Id = nextNoteId++;
-            repairNotes.Add(note);
+
+            context.RepairNotes.Add(note);
+            context.SaveChanges();
         }
 
         public List<RepairNote> GetNotesByRepairItem(int repairItemId)
         {
-            return repairNotes
+            return context.RepairNotes
                 .Where(n => n.RepairItemId == repairItemId)
                 .ToList();
         }
