@@ -41,6 +41,7 @@ do
 
 } while (option != "0");
 
+// Adds a new repair item
 void AddDamagedItem(RepairService service)
 {
     Console.Clear();
@@ -54,6 +55,7 @@ void AddDamagedItem(RepairService service)
     Pause();
 }
 
+// Displays all repair items with note count
 void ViewAllItems(RepairService service)
 {
     Console.Clear();
@@ -79,6 +81,7 @@ void ViewAllItems(RepairService service)
     Pause();
 }
 
+// Edits an existing repair item
 void EditRepairItem(RepairService service)
 {
     Console.Clear();
@@ -98,12 +101,15 @@ void EditRepairItem(RepairService service)
         Pause();
         return;
     }
+
+    // Prevent editing completed items
     if (item.Status == "Repaired")
     {
         Console.WriteLine("Cannot modify a repaired item.");
         Pause();
         return;
     }
+
     Console.WriteLine($"Editing item: {item.ItemName}");
 
     string newName = ReadRequiredText("New item name: ");
@@ -115,6 +121,7 @@ void EditRepairItem(RepairService service)
     Pause();
 }
 
+// Searches items by name or status
 void SearchRepairItem(RepairService service)
 {
     Console.Clear();
@@ -166,6 +173,7 @@ void SearchRepairItem(RepairService service)
     Pause();
 }
 
+// Updates the status with validation rules
 void UpdateRepairStatus(RepairService service)
 {
     Console.Clear();
@@ -185,6 +193,8 @@ void UpdateRepairStatus(RepairService service)
         Pause();
         return;
     }
+
+    // Prevent modifying completed items
     if (item.Status == "Repaired")
     {
         Console.WriteLine("Cannot modify a repaired item.");
@@ -206,9 +216,11 @@ void UpdateRepairStatus(RepairService service)
     {
         Console.WriteLine("Repair status updated successfully.");
     }
+
     Pause();
 }
 
+// Adds a note to a repair item
 void AddRepairNote(RepairService service)
 {
     Console.Clear();
@@ -228,6 +240,8 @@ void AddRepairNote(RepairService service)
         Pause();
         return;
     }
+
+    // Prevent adding notes to completed items
     if (item.Status == "Repaired")
     {
         Console.WriteLine("Cannot add notes to a repaired item.");
@@ -245,6 +259,7 @@ void AddRepairNote(RepairService service)
     Pause();
 }
 
+// Displays notes for a specific item
 void ViewRepairNotes(RepairService service)
 {
     Console.Clear();
@@ -285,6 +300,7 @@ void ViewRepairNotes(RepairService service)
     Pause();
 }
 
+// Deletes a repair item with confirmation
 void DeleteRepairItem(RepairService service)
 {
     Console.Clear();
@@ -323,6 +339,7 @@ void DeleteRepairItem(RepairService service)
     Pause();
 }
 
+// Shows items to help user select an ID
 bool ShowItemsForSelection(RepairService service)
 {
     List<RepairItem> items = service.GetAllRepairItems();
@@ -345,6 +362,7 @@ bool ShowItemsForSelection(RepairService service)
     return true;
 }
 
+// Forces user to select a valid status
 string SelectStatus()
 {
     string option;
@@ -375,6 +393,7 @@ string SelectStatus()
     };
 }
 
+// Reads a valid integer input
 int ReadInt(string message)
 {
     int value;
@@ -389,6 +408,7 @@ int ReadInt(string message)
     return value;
 }
 
+// Ensures non-empty text input
 string ReadRequiredText(string message)
 {
     string value;
@@ -408,6 +428,7 @@ string ReadRequiredText(string message)
     return value;
 }
 
+// Pauses execution until key press
 void Pause()
 {
     Console.WriteLine("\nPress any key to continue...");
