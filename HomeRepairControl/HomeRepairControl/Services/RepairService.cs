@@ -36,15 +36,26 @@ namespace HomeRepairControl.Services
                 .ToList();
         }
 
-        public void UpdateStatus(int id, string status)
+        public bool UpdateStatus(int id, string newStatus)
         {
-            RepairItem? item = GetRepairItemById(id);
+            var item = GetRepairItemById(id);
+            if (item == null) return false;
 
-            if (item != null)
+            if (item.Status == "Pending" && newStatus == "In Repair")
             {
-                item.Status = status;
-                context.SaveChanges();
+                item.Status = newStatus;
             }
+            else if (item.Status == "In Repair" && newStatus == "Repaired")
+            {
+                item.Status = newStatus;
+            }
+            else
+            {
+                return false;
+            }
+
+            context.SaveChanges();
+            return true;
         }
 
         public void UpdateNotes(int id, string notes)
@@ -53,7 +64,6 @@ namespace HomeRepairControl.Services
 
             if (item != null)
             {
-                item.Notes = notes;
                 context.SaveChanges();
             }
         }
@@ -86,6 +96,29 @@ namespace HomeRepairControl.Services
         {
             return context.RepairNotes
                 .Where(n => n.RepairItemId == repairItemId)
+                .ToList();
+        }
+        public int GetNoteCountByRepairItem(int repairItemId)
+        {
+            return context.RepairNotes.Count(n => n.RepairItemId == repairItemId);
+        }
+
+        public void UpdateRepairItem(int id, string itemName, string damageDescription)
+        {
+            RepairItem? item = GetRepairItemById(id);
+
+            if (item != null)
+            {
+                item.ItemName = itemName;
+                item.DamageDescription = damageDescription;
+                context.SaveChanges();
+            }
+        }
+
+        public List<RepairItem> SearchByName(string name)
+        {
+            return context.RepairItems
+                .Where(i => i.ItemName.Contains(name))
                 .ToList();
         }
     }

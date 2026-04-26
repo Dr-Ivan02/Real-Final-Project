@@ -7,7 +7,6 @@
         public string DamageDescription { get; set; } = string.Empty;
         public DateTime EntryDate { get; set; }
         public string Status { get; set; } = "Pending";
-        public string Notes { get; set; } = string.Empty;
 
         public RepairItem() { }
 
@@ -26,7 +25,6 @@
             Console.WriteLine($"Damage: {DamageDescription}");
             Console.WriteLine($"Status: {Status}");
             Console.WriteLine($"Entry Date: {EntryDate:dd/MM/yyyy}");
-            Console.WriteLine($"Notes: {Notes}");
         }
     }
 }
